@@ -6,6 +6,7 @@
 
 pub mod vga;
 pub mod serial_ports;
+pub use arch; 
 
 #[cfg(test)]
 pub(crate) mod tests;
@@ -17,6 +18,6 @@ pub mod panic;
 pub extern "C" fn _start() -> ! {
     #[cfg(test)]
     test_main();
-
+    
     loop {}
 }
