@@ -1,13 +1,14 @@
-use x86_64::instructions::port::Port;
+use core::arch::asm;
 
 pub enum QemuExitCode {
     Success = 0x10,
     Failed = 0x11,
 }
 
+const EXIT_PORT: u16 = 0xf4;
+
 pub fn exit_qemu(exit_code: QemuExitCode) {
     unsafe {
-        let mut port = Port::new(0xf4);
-        port.write(exit_code as u32);
+        asm!("out dx, eax", in("dx") EXIT_PORT, in("eax") exit_code as u32, options(nomem, nostack, preserves_flags));
     }
 }
