@@ -3,8 +3,8 @@ use super::colors::ColorCode;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(C)]
 pub struct VGAChar {
-    ascii_character: u8,
-    color_code: ColorCode,
+    pub(crate) ascii_character: u8,
+    pub(crate) color_code: ColorCode,
 }
 
 

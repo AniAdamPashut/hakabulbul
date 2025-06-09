@@ -1,28 +1,67 @@
+use core::fmt::Arguments;
 use core::fmt::Write;
 use volatile::Volatile;
+use lazy_static::lazy_static;
+use spin::Mutex;
 
-use super::colors::Color;
-use super::colors::ColorCode;
+pub use super::colors::Color;
+pub use super::colors::ColorCode;
 use super::chars::VGAChar;
 
-const BUFFER_HEIGHT: usize = 25;
-const BUFFER_WIDTH: usize = 80;
+pub const BUFFER_HEIGHT: usize = 25;
+pub const BUFFER_WIDTH: usize = 80;
 
 #[repr(transparent)]
-struct Buffer {
+pub(crate) struct Buffer {
     pub chars: [[Volatile<VGAChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
 pub struct VGABuffer{
     column_position: usize,
+    row_position: usize,
     color_code: ColorCode,
-    buffer: &'static mut Buffer,
+    pub(crate)buffer: &'static mut Buffer,
 }
+
+lazy_static! {
+    pub static ref VGA_BUFFER: Mutex<VGABuffer> = Mutex::new(VGABuffer::new());
+}
+
+#[macro_export]
+macro_rules! print {
+    ($($arg:tt)*) => ($crate::vga::vga_buffer::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+    () => ($crate::print!("\n"));
+    ($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+#[doc(hidden)]
+pub fn _print(args: Arguments) {
+    use core::fmt::Write;
+    VGA_BUFFER.lock().write_fmt(args).unwrap();
+}
+
+#[macro_export]
+macro_rules! recolor {    
+    ($color:expr) => {
+        $crate::vga::_change_color($color);
+    };
+}
+
+#[doc(hidden)]
+pub fn _change_color(color: ColorCode) {
+    VGA_BUFFER.lock().color_code = color;
+}
+
 
 impl VGABuffer {
     pub fn new() -> VGABuffer {
         VGABuffer {
             column_position: 0,
+            row_position: 0,
             color_code: ColorCode::new(Color::Yellow, Color::Black),
             buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
         }
@@ -35,7 +74,7 @@ impl VGABuffer {
                     self.new_line();
                 }
 
-                let row = BUFFER_HEIGHT - 1;
+                let row = self.row_position;
                 let col = self.column_position;
 
                 let color_code = self.color_code;
@@ -46,22 +85,10 @@ impl VGABuffer {
     }
 
     fn new_line(&mut self) {
-        for row in 1..BUFFER_HEIGHT {
-            for col in 0..BUFFER_WIDTH {
-                let character = self.buffer.chars[row][col].read();
-                self.buffer.chars[row - 1][col].write(character);
-            }
-        }
-        self.clear_row(BUFFER_HEIGHT - 1);
         self.column_position = 0;
+        self.row_position += 1;
     }
     
-    fn clear_row(&mut self, row: usize) {
-        let blank = VGAChar::new(b' ', self.color_code);
-        for col in 0..BUFFER_WIDTH {
-            self.buffer.chars[row][col].write(blank);
-        }
-    }
 }
 
 
