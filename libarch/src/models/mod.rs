@@ -2,8 +2,9 @@ use crate::models::address::VirtualAddress;
 
 pub mod address;
 pub mod interrupts;
-pub mod privilage;
+pub mod privilege;
 pub mod segments;
+pub mod gdt;
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C, packed(2))]

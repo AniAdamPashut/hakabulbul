@@ -3,6 +3,7 @@ use core::marker::PhantomData;
 use bit_field::BitField;
 
 use crate::models::address::VirtualAddress;
+use crate::models::privilege::PrivilegeLevel;
 use crate::models::segments::{Segment, SegmentSelector, CS};
 
 #[repr(C)]
@@ -21,16 +22,39 @@ impl DescriptorOptions {
         }
     }
 
-    pub fn set_code_selector(&mut self, code: SegmentSelector) {
+    pub unsafe fn set_code_selector(&mut self, code: SegmentSelector) -> &mut Self {
         self.cs = code;
+        self
     }
     
-    pub fn set_present(&mut self, present: bool) {
+    pub fn set_present(&mut self, present: bool) -> &mut Self {
         self.bits.set_bit(15, present);
+        self
     }
 
     fn present(&self) -> bool {
         self.bits.get_bit(15)
+    }
+        #[inline]
+    pub fn set_privilege_level(&mut self, dpl: PrivilegeLevel) -> &mut Self {
+        self.bits.set_bits(13..15, dpl as u16);
+        self
+    }
+
+    fn privilege_level(&self) -> PrivilegeLevel {
+        PrivilegeLevel::from_u16(self.bits.get_bits(13..15))
+    }
+    
+    #[inline]
+    pub unsafe fn set_stack_index(&mut self, index: u16) -> &mut Self {
+        // The hardware IST index starts at 1, but our software IST index
+        // starts at 0. Therefore we need to add 1 here.
+        self.bits.set_bits(0..3, index + 1);
+        self
+    }
+
+    fn stack_index(&self) -> Option<u16> {
+        self.bits.get_bits(0..3).checked_sub(1)
     }
 }
 
@@ -66,7 +90,6 @@ impl<F> InterruptDescriptor<F> {
         self.pointer_high = (addr >> 32) as u32;
 
         self.options = DescriptorOptions::minimal();
-        // SAFETY: The current CS is a valid, long-mode code segment.
         unsafe { self.options.set_code_selector(CS::get_reg()) };
         self.options.set_present(true);
         &mut self.options

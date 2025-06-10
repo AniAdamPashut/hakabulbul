@@ -18,6 +18,7 @@ panic = "abort"
 
 [dependencies]
 bootloader = "0.9"
+x86_64 = "0.14.2"
 libkernel = { path = "../libkernel" }
 
 [dependencies.lazy_static]

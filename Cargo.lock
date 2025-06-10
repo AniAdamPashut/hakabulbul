@@ -62,6 +62,7 @@ dependencies = [
  "bootloader",
  "lazy_static",
  "libkernel",
+ "x86_64",
 ]
 
 [[package]]

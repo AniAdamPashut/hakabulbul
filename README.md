@@ -12,4 +12,4 @@ huge props to [this guy](https://os.phil-opp.com) and all the repos under this [
 - [ ] idk haven't decided yet on this one but it will be important for sure
 
 
-some of the code is taken from [this repo](https://github.com/rust-osdev/x86_64) and licensed under [this license](./LICENSE-MIT)
+some of the code is taken from [this repo](https://github.com/rust-osdev/x86_64) and licensed under [this license](./LICENSE-MIT)`

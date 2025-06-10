@@ -1,6 +1,6 @@
 use bit_field::BitField;
 
-use crate::models::privilage::PrivilegeLevel;
+use crate::models::privilege::PrivilegeLevel;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 #[repr(transparent)]
@@ -23,7 +23,7 @@ impl SegmentSelector {
 
     #[inline]
     pub fn rpl(self) -> PrivilegeLevel {
-        PrivilegeLevel::from(self.0.get_bits(0..2))
+        PrivilegeLevel::from_u16(self.0.get_bits(0..2))
     }
 
     #[inline]
@@ -33,6 +33,7 @@ impl SegmentSelector {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub struct Msr(u32);
 
 impl Msr {

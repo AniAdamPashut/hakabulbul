@@ -1,5 +1,6 @@
 use crate::models::address::VirtualAddress;
-use crate::models::DescriptorTablePointer;
+use crate::models::DescriptorTablePointer;        
+use crate::instructions::tables::load_idt;
 
 use super::InterruptHandler;
 use super::InterruptHandlerWithErrorCode;
@@ -38,7 +39,7 @@ pub struct InterruptDescriptorTable {
     pub security_exception: InterruptDescriptor<InterruptHandlerWithErrorCode>,
     _reserved3: InterruptDescriptor<InterruptHandler>,
 
-    custom_interrupts: [InterruptDescriptor<InterruptHandler>; 256 - 32],
+    pub custom_interrupts: [InterruptDescriptor<InterruptHandler>; 256 - 32],
 }
 
 impl InterruptDescriptorTable {
@@ -82,7 +83,6 @@ impl InterruptDescriptorTable {
 
     #[inline]
     pub unsafe fn load_unsafe(&self) {
-        use crate::instructions::interrupts::load_idt;
         unsafe {
             load_idt(&self.pointer());
         }

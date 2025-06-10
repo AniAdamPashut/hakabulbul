@@ -7,9 +7,9 @@ pub enum PrivilegeLevel {
     Ring3 = 3, // Ring 3 - least privilaged
 }
 
-impl From<u16> for PrivilegeLevel {
+impl PrivilegeLevel {
     #[inline]
-    fn from(value: u16) -> PrivilegeLevel {
+    pub const fn from_u16(value: u16) -> PrivilegeLevel {
         match value {
             0 => PrivilegeLevel::Ring0,
             1 => PrivilegeLevel::Ring1,

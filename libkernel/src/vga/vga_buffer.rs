@@ -56,6 +56,7 @@ pub fn _change_color(color: ColorCode) {
     VGA_BUFFER.lock().color_code = color;
 }
 
+const VGA_BUFFER_ADDRESS: usize = 0xb8000;
 
 impl VGABuffer {
     pub fn new() -> VGABuffer {
@@ -63,7 +64,7 @@ impl VGABuffer {
             column_position: 0,
             row_position: 0,
             color_code: ColorCode::new(Color::Yellow, Color::Black),
-            buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
+            buffer: unsafe { &mut *(VGA_BUFFER_ADDRESS as *mut Buffer) },
         }
     }
     pub fn write_byte(&mut self, byte: u8) {

@@ -28,8 +28,6 @@ macro_rules! impl_handler_func_type {
         unsafe impl HandlerFuncType for $f {
             #[inline]
             fn to_virt_addr(self) -> VirtualAddress {
-                // Casting a function pointer to u64 is fine, if the pointer
-                // width doesn't exeed 64 bits.
                 VirtualAddress::new(self as u64)
             }
         }

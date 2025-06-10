@@ -7,6 +7,7 @@ The holy scriptures for this one are the [intel manual](https://www.intel.com/co
 
 
 ## TODOS
-- [ ] figure out the idt and register the interrupt table to that.
-- [ ] implement abstractions for registers and segments.
+- [X] figure out the idt and register the interrupt table to that.
+- [X] implement abstractions for segments.
+- [ ] implement abstractions for registers
  
