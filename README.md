@@ -7,4 +7,6 @@ huge props to [this guy](https://os.phil-opp.com) and all the repos under this [
 
 ![logo](./assets/logo.png)
 
+[The roadmap](./docs/roadmap.md)
+
 some of the code is taken from [this repo](https://github.com/rust-osdev/x86_64) and licensed under [this license](./LICENSE-MIT)`
