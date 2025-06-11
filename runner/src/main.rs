@@ -2,6 +2,8 @@
 #![no_main]
 
 
+use core::arch::asm;
+
 use lazy_static::lazy_static;
 use kernel::{
     arch::{load_tss, models::{
@@ -23,7 +25,7 @@ use kernel::{
     }
 };
 
-pub const DOUBLE_FAULT_IST_INDEX: usize = 0;
+pub const DOUBLE_FAULT_IST_INDEX: u16 = 0;
 
 struct Selectors {
     cs: SegmentSelector,
@@ -33,7 +35,7 @@ struct Selectors {
 lazy_static! {
     static ref TSS: TaskStateSegment = {
         let mut tss = TaskStateSegment::new();
-        tss.interrupt_stack_table[DOUBLE_FAULT_IST_INDEX] = {
+        tss.interrupt_stack_table[DOUBLE_FAULT_IST_INDEX as usize] = {
             const STACK_SIZE: usize = 4096 * 5;
             static mut STACK: [u8; STACK_SIZE] = [0; STACK_SIZE];
 
@@ -61,7 +63,7 @@ lazy_static! {
         let mut idt = InterruptDescriptorTable::new();
         idt.breakpoint.set_handler(handle_breakpoint);
         unsafe {
-            idt.double_fault.set_handler(handle_double_fault).set_stack_index(DOUBLE_FAULT_IST_INDEX as u16);
+            idt.double_fault.set_handler(handle_double_fault).set_stack_index(DOUBLE_FAULT_IST_INDEX);
         }
         idt
     };
@@ -88,16 +90,9 @@ pub extern "C" fn _start() -> ! {
     GDT.0.load();
 
     unsafe {
-        CS::set_reg(GDT.1.cs);
-        load_tss(GDT.1.tss);
+        asm!("int3", options(nostack, preserves_flags));
     }
 
-    fn stack_overflow() {
-        stack_overflow(); // for each recursion, the return address is pushed
-    }
-
-    // trigger a stack overflow
-    stack_overflow();
     recolor!(ColorCode::new(Color::Cyan, Color::DarkGray));
     println!("");
     println!("1 + 1 = 2");

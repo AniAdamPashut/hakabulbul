@@ -16,6 +16,12 @@ panic = "abort"
 [profile.release]
 panic = "abort"
 
+[package.metadata.bootimage]
+run-args = [
+    "-d", "cpu,int",
+    # "-no-reboot"
+]
+
 [dependencies]
 bootloader = "0.9"
 x86_64 = "0.14.2"

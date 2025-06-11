@@ -12,6 +12,7 @@ pub use descriptor::Descriptor;
 pub struct GDTEntry(AtomicU64);
 
 #[derive(Debug, Clone)]
+#[repr(C)]
 pub struct GlobalDescriptorTable<const MAX: usize = 8> {
     table: [GDTEntry; MAX],
     len: usize,
