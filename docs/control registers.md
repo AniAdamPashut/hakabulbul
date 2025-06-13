@@ -34,3 +34,7 @@ Contains the linear address that caused a page-fault.
 - CR3.PCD | "Page-level Cache Disable" - Same as before. My guess is that their relationship is the same as the `CR0.NW` and `CR0.CD` flags.
 - CR3.LAM_U57 | "User LAM57 Enable" - Enables the Linear Address Masking for user pointers between 57..62. Overrides `LAM_U48`
 - CR3.LAM_U48 | "User LAM48 Enable" - Same as the `LAM_U57` but the bit range is 48..62.
+
+## CR4
+
+Haven't been able to find the power to list them all. They are available in the intel manual under volume 3A in chapter 2.5 somewhere.
