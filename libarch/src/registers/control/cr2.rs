@@ -1,0 +1,1 @@
+pub struct CR2(u64);

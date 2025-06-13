@@ -18,7 +18,7 @@ impl DescriptorOptions {
     const fn minimal() -> Self {
         DescriptorOptions {
             cs: SegmentSelector(0),
-            bits: 0b1110_0000_0000, // Default to a 64-bit Interrupt Gate
+            bits: 0b0000_1110_0000_0000, // Default to a 64-bit Interrupt Gate
         }
     }
 
@@ -60,7 +60,7 @@ impl DescriptorOptions {
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
-pub struct InterruptDescriptor<F> {
+pub struct InterruptDescriptor<F> { 
     pointer_low: u16,      // offset bits 0..15
     options: DescriptorOptions, // the options or somethign
     pointer_middle: u16,   // offset bits 16..31
