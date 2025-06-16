@@ -36,20 +36,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "libarch"
-version = "0.1.0"
-dependencies = [
- "bit_field",
- "bitflags 2.9.1",
-]
-
-[[package]]
 name = "libkernel"
 version = "0.1.0"
 dependencies = [
  "bootloader",
  "lazy_static",
- "libarch",
  "spin 0.5.2",
  "uart_16550",
  "volatile 0.2.7",
@@ -62,7 +53,6 @@ dependencies = [
  "bootloader",
  "lazy_static",
  "libkernel",
- "x86_64",
 ]
 
 [[package]]

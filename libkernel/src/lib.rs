@@ -5,8 +5,8 @@
 #![reexport_test_harness_main = "test_main"]
 
 pub mod vga;
+pub mod gdt;
 pub mod serial_ports;
-pub use arch; 
 
 #[cfg(test)]
 pub(crate) mod tests;

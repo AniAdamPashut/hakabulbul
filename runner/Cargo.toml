@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [[bin]]
-name = "hakabulbul"
+name = "hackabulbul"
 path = "src/main.rs"
 test = false
 doctest = false
@@ -18,13 +18,14 @@ panic = "abort"
 
 [package.metadata.bootimage]
 run-args = [
-    "-d", "cpu,int",
-    # "-no-reboot"
+    "-serial", "stdio",
+    # "-S", "-s",
+    # "-d", "cpu,int",
+    # "-no-reboot" 
 ]
 
 [dependencies]
 bootloader = "0.9"
-x86_64 = "0.14.2"
 libkernel = { path = "../libkernel" }
 
 [dependencies.lazy_static]
