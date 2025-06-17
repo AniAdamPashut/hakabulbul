@@ -4,6 +4,7 @@ mod qemu_exit;
 mod testable;
 
 pub mod vga;
+pub mod gdt;
 
 use qemu_exit::exit_qemu;
 use qemu_exit::QemuExitCode;

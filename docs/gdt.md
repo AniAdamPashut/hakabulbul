@@ -1,0 +1,3 @@
+# Global Descriptor Table
+
+Each memory accessed in protected-mode (x86 32-bit mode) pass through either the GDT (Global Descriptor Table) or the LDT (Local Descriptor Table). Each entry in the table is called a Segment Descriptor. The Segment Descriptor hold the base address of the segment as well as the type, access rights and usage information (some flags). From the descriptor the processor can use the base address to calculate the full address in the linear address space. The machnism can be used to access any valid address as long as they are accessible by the current CPL

@@ -8,6 +8,7 @@ use kernel::{
     }
 };
 
+mod initialization;
 
 // Model GDT in rust
 // Model IDT in rust

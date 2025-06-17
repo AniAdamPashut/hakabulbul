@@ -6,6 +6,7 @@
 
 pub mod vga;
 pub mod gdt;
+pub mod idt;
 pub mod serial_ports;
 
 #[cfg(test)]
