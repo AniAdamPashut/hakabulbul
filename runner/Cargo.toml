@@ -19,7 +19,7 @@ panic = "abort"
 [package.metadata.bootimage]
 run-args = [
     "-serial", "stdio",
-    # "-S", "-s",
+    "-S", "-s",
     # "-d", "cpu,int",
     # "-no-reboot" 
 ]

@@ -39,7 +39,6 @@ dependencies = [
 name = "libkernel"
 version = "0.1.0"
 dependencies = [
- "bootloader",
  "lazy_static",
  "spin 0.5.2",
  "uart_16550",

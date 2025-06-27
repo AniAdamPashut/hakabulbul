@@ -1,8 +1,9 @@
+use crate::tables::gdt::SegmentDescriptor;
+
+
 #[test_case]
 #[allow(non_snake_case)]
 pub fn set_base__32bit_address__written_correctly() {
-    use crate::gdt::SegmentDescriptor;
-
     // Arrange
     let mut segment: SegmentDescriptor = SegmentDescriptor::new();
     let offset: u32 = 0xAABBCCCC;
@@ -19,8 +20,6 @@ pub fn set_base__32bit_address__written_correctly() {
 #[test_case]
 #[allow(non_snake_case)]
 pub fn set_limit__20bit_number__written_correctly() {
-    use crate::gdt::SegmentDescriptor;
-
     // Arrange
     let mut segment: SegmentDescriptor = SegmentDescriptor::new();
     let limit: u32 = 0xABBBB;

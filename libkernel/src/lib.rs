@@ -5,8 +5,7 @@
 #![reexport_test_harness_main = "test_main"]
 
 pub mod vga;
-pub mod gdt;
-pub mod idt;
+pub mod tables;
 pub mod serial_ports;
 
 #[cfg(test)]

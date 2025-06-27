@@ -1,3 +1,7 @@
+use core::{arch::asm, mem::transmute};
+
+use crate::tables::TablePointer;
+
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct SegmentDescriptor { 
@@ -12,7 +16,7 @@ pub struct SegmentDescriptor {
 #[derive(Debug)]
 #[repr(C)]
 pub struct GlobalDescriptorTable<const MAX: usize> {
-    table: [SegmentDescriptor; MAX],
+    table: [u64; MAX],
     length: usize
 }
 
@@ -48,21 +52,30 @@ impl SegmentDescriptor {
 
 impl<const MAX: usize> GlobalDescriptorTable<MAX> {
     pub const fn new() -> GlobalDescriptorTable<MAX> {
-        GlobalDescriptorTable { table: [SegmentDescriptor::new(); MAX], length: 1 }
+        GlobalDescriptorTable { table: [0u64; MAX], length: 1 }
     }
 
-    pub fn append(&mut self, segment: SegmentDescriptor) -> Result<&mut GlobalDescriptorTable<MAX>, ()> {
+    pub fn append(&mut self, segment: SegmentDescriptor) -> Result<u16, ()> {
         if self.length >= MAX {
             return Err(())
         }
-
-        self.table[self.length] = segment;
+        let index = self.length as u16;
+        unsafe {
+            self.table[self.length] = transmute(segment);
+        }
         self.length += 1;
-        Ok(self)
+        Ok(index)
     }
 
     pub fn load(&mut self) -> Result<(), ()> {
-        unimplemented!("implement load");
+        let offset = self.table.as_ptr() as u64;
+        let limit = (size_of::<u64>() * self.length - 1) as u16;
+        
+        let table_pointer = TablePointer { offset, limit };
+
+        unsafe {
+            asm!("lgdt [{}]", in (reg) &table_pointer, options(readonly, nostack, preserves_flags));
+        }
         Ok(())
     }
 }
